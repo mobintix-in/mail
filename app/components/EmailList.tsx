@@ -1,84 +1,52 @@
 "use client";
 
 import { Star, Square, Archive, Trash2, Mail, Clock } from "lucide-react";
+import { Email } from "../../lib/data";
 
 interface EmailListProps {
   title?: string;
+  emails: Email[];
 }
 
-export default function EmailList({ title = "Inbox" }: EmailListProps) {
-  const emails = [
-    {
-      id: 1,
-      sender: "Google Play",
-      subject: "Receipt for your recent purchase",
-      snippet: "You've made a purchase on Google Play. Thank you for...",
-      time: "9:42 AM",
-      read: false,
-    },
-    {
-      id: 2,
-      sender: "Dribbble",
-      subject: "10 new design jobs for you",
-      snippet: "Check out the latest design opportunities tailored for you...",
-      time: "Jan 24",
-      read: true,
-    },
-    {
-      id: 3,
-      sender: "Notion",
-      subject: "New features: AI Q&A and more",
-      snippet: "We just released a bunch of new features to help you write...",
-      time: "Jan 22",
-      read: true,
-    },
-    {
-      id: 4,
-      sender: "Linear",
-      subject: "Linear 2025.1 Release",
-      snippet: "Introducing the new cycles view, improved insights, and...",
-      time: "Jan 20",
-      read: false,
-    },
-    {
-      id: 5,
-      sender: "Figma Team",
-      subject: "Comments on 'Mobile App Redesign'",
-      snippet: "Sara mentioned you in a comment: @Antigravity can we update...",
-      time: "Jan 18",
-      read: true,
-    },
-  ];
-
+export default function EmailList({ title = "Inbox", emails }: EmailListProps) {
   return (
     <div className="email-list-container glass-panel">
       <div className="toolbar">
-        <button className="icon-btn tool"><Square size={18} /></button>
-        <button className="icon-btn tool"><Archive size={18} /></button>
-        <button className="icon-btn tool"><Trash2 size={18} /></button>
-        <button className="icon-btn tool"><Mail size={18} /></button>
-        <button className="icon-btn tool"><Clock size={18} /></button>
+        <h2 className="toolbar-title">{title}</h2>
+        <div className="toolbar-actions">
+          <button className="icon-btn tool" aria-label="Select all"><Square size={18} /></button>
+          <button className="icon-btn tool" aria-label="Archive"><Archive size={18} /></button>
+          <button className="icon-btn tool" aria-label="Delete"><Trash2 size={18} /></button>
+          <button className="icon-btn tool" aria-label="Mark as unread"><Mail size={18} /></button>
+          <button className="icon-btn tool" aria-label="Snooze"><Clock size={18} /></button>
+        </div>
       </div>
 
       <div className="list">
-        {emails.map((email) => (
-          <div key={email.id} className={`email-row ${!email.read ? "unread" : ""}`}>
-            <div className="actions">
-              <button className="checkbox"><Square size={18} /></button>
-              <button className="star"><Star size={18} /></button>
+        {emails.length === 0 ? (
+          <div className="empty-state">No emails in {title}</div>
+        ) : (
+          emails.map((email) => (
+            <div key={email.id} className={`email-row ${!email.read ? "unread" : ""}`}>
+              <div className="actions">
+                <button className="checkbox" aria-label="Select"><Square size={18} /></button>
+                <button className={`star ${email.starred ? "starred" : ""}`} aria-label="Star">
+                  <Star size={18} fill={email.starred ? "currentColor" : "none"} />
+                </button>
+              </div>
+
+              <div className="sender">{email.sender}</div>
+
+              <div className="content">
+                <span className="subject">{email.subject}</span>
+                <span className="separator">-</span>
+                <span className="snippet">{email.snippet}</span>
+              </div>
+
+              <div className="time">{email.time}</div>
             </div>
-
-            <div className="sender">{email.sender}</div>
-
-            <div className="content">
-              <span className="subject">{email.subject}</span>
-              <span className="separator">-</span>
-              <span className="snippet">{email.snippet}</span>
-            </div>
-
-            <div className="time">{email.time}</div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       <style jsx>{`
@@ -95,9 +63,20 @@ export default function EmailList({ title = "Inbox" }: EmailListProps) {
         .toolbar {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          justify-content: space-between;
           padding: 0.75rem 1rem;
           border-bottom: 1px solid var(--card-border);
+        }
+
+        .toolbar-title {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--primary);
+        }
+
+        .toolbar-actions {
+          display: flex;
+          gap: 0.5rem;
         }
 
         .tool {
@@ -114,6 +93,13 @@ export default function EmailList({ title = "Inbox" }: EmailListProps) {
         .list {
           flex: 1;
           overflow-y: auto;
+        }
+
+        .empty-state {
+            padding: 4rem;
+            text-align: center;
+            opacity: 0.5;
+            font-size: 1.2rem;
         }
 
         .email-row {
@@ -191,6 +177,10 @@ export default function EmailList({ title = "Inbox" }: EmailListProps) {
         
         .checkbox:hover, .star:hover {
           color: rgba(237, 237, 237, 0.8);
+        }
+
+        .star.starred {
+            color: #facc15; /* Yellow/Gold for starred */
         }
 
         button {
