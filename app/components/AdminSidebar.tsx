@@ -17,6 +17,11 @@ const menuItems = [
 export default function AdminSidebar() {
     const pathname = usePathname();
 
+    const handleLogout = () => {
+        document.cookie = "admin_auth_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        window.location.href = "/admin/login";
+    };
+
     return (
         <aside className="w-64 h-screen bg-[#0d0d0d] border-r border-white/10 flex flex-col z-50">
             <div className="p-6">
@@ -62,7 +67,10 @@ export default function AdminSidebar() {
                     <ShieldCheck size={18} />
                     <span>Go to Mail</span>
                 </Link>
-                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400/70 hover:bg-red-500/10 hover:text-red-400 transition-all">
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400/70 hover:bg-red-500/10 hover:text-red-400 transition-all font-semibold"
+                >
                     <LogOut size={18} />
                     <span>Sign Out</span>
                 </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Menu, Settings, HelpCircle, Bell, User, ChevronDown, Check, X } from "lucide-react";
+import { Search, Menu, Settings, HelpCircle, Bell, User, ChevronDown, Check, X, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useMail } from "../context/MailContext";
 import { ACCOUNTS } from "../../lib/data";
@@ -11,6 +11,12 @@ export default function Header() {
   const { selectedAccount, setSelectedAccount, isSidebarOpen, setIsSidebarOpen } = useMail();
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+
+  const handleLogout = () => {
+    // Clear mock session cookie
+    document.cookie = "auth_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    window.location.href = "/login";
+  };
 
   return (
     <header className="h-16 flex items-center justify-between px-2 md:px-4 sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/10">
@@ -135,6 +141,18 @@ export default function Header() {
                     )}
                   </button>
                 ))}
+
+                <div className="h-px bg-white/5 my-2" />
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-red-500/10 text-red-400 transition-all font-semibold text-sm"
+                >
+                  <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center">
+                    <LogOut size={18} />
+                  </div>
+                  <span>Sign Out</span>
+                </button>
               </motion.div>
             )}
           </AnimatePresence>

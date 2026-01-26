@@ -4,6 +4,7 @@ import { Inbox, Star, Clock, Send, File, ChevronDown, Plus, CalendarDays, AlertO
 import { useMail } from "../context/MailContext";
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const navItems = [
   { id: "inbox", icon: Inbox, label: "Inbox", count: 12 },
@@ -52,8 +53,9 @@ export default function Sidebar() {
           const isActive = selectedCategory === item.id;
 
           return (
-            <button
+            <Link
               key={item.id}
+              href={`/${item.id}`}
               onClick={() => {
                 setSelectedCategory(item.id);
                 if (window.innerWidth < 1024) setIsSidebarOpen(false);
@@ -80,7 +82,7 @@ export default function Sidebar() {
                   {item.count}
                 </span>
               )}
-            </button>
+            </Link>
           );
         })}
       </nav>
@@ -159,8 +161,9 @@ export default function Sidebar() {
                     const Icon = item.icon;
                     const isActive = selectedCategory === item.id;
                     return (
-                      <button
+                      <Link
                         key={item.id}
+                        href={`/${item.id}`}
                         onClick={() => {
                           setSelectedCategory(item.id);
                           setIsSidebarOpen(false);
@@ -172,7 +175,7 @@ export default function Sidebar() {
                       >
                         <Icon size={20} className="flex-shrink-0" />
                         <span className="flex-1 text-left">{item.label}</span>
-                      </button>
+                      </Link>
                     );
                   })}
                 </nav>

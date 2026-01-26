@@ -1,9 +1,8 @@
 "use client";
 
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Github, Chrome, ArrowRight, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
 import { cn } from "../../lib/utils";
 
 export default function LoginPage() {
@@ -13,10 +12,13 @@ export default function LoginPage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate login
+
+        // Simulating a production auth flow
+        document.cookie = "auth_session=true; path=/; max-age=3600; SameSite=Lax";
+
         setTimeout(() => {
             window.location.href = "/";
-        }, 1500);
+        }, 1200);
     };
 
     return (
