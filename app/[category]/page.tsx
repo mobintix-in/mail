@@ -2,27 +2,34 @@
 
 import { use, useEffect, useState } from "react";
 import EmailList from "../components/EmailList";
+import { getEmails, Email } from "../../lib/data";
 
 interface CategoryPageProps {
-    params: Promise<{ category: string }>;
+  params: Promise<{ category: string }>;
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
-    // In Next.js 15+, params is a Promise that needs to be unwrapped
-    // We can use the React.use() hook to unwrap it
-    const resolvedParams = use(params);
+  // Unwrap params using use() hook for Next 15+
+  const resolvedParams = use(params);
+  const category = resolvedParams.category;
 
-    // Basic capitalization
-    const title = resolvedParams.category.charAt(0).toUpperCase() + resolvedParams.category.slice(1);
+  // Basic capitalization
+  const title = category.charAt(0).toUpperCase() + category.slice(1);
 
-    return (
-        <>
-            <EmailList title={title} />
-            <style jsx global>{`
+  const [emails, setEmails] = useState<Email[]>([]);
+
+  useEffect(() => {
+    getEmails(category).then(setEmails);
+  }, [category]);
+
+  return (
+    <>
+      <EmailList title={title} emails={emails} />
+      <style jsx global>{`
         body {
           overflow: hidden;
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }
