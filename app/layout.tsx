@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import ComposeContainer from "./components/ComposeContainer";
+import { MailProvider } from "./context/MailContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gmail Clone",
-  description: "A premium Gmail clone built with Next.js",
+  title: "Premium Mail",
+  description: "A premium mail app for custom domains",
 };
 
 export default function RootLayout({
@@ -27,17 +29,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable}`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="app-container">
-          <Header />
-          <div className="main-body">
-            <Sidebar />
-            <main className="content-area">
-              {children}
-            </main>
+        <MailProvider>
+          <div className="app-container h-screen flex flex-col overflow-hidden">
+            <Header />
+            <div className="main-body flex flex-1 overflow-hidden">
+              <Sidebar />
+              <main className="content-area flex-1 relative overflow-hidden bg-black/20">
+                {children}
+              </main>
+            </div>
+            <ComposeContainer />
           </div>
-        </div>
+        </MailProvider>
       </body>
     </html>
   );

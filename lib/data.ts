@@ -8,7 +8,13 @@ export interface Email {
     starred: boolean;
     labels: string[];
     category: "inbox" | "social" | "updates" | "promotions" | "spam" | "trash" | "drafts" | "sent" | "snoozed" | "scheduled";
+    account: string;
 }
+
+export const ACCOUNTS = [
+    { name: "Mobintix", email: "aryan@mobintix.app", color: "#3b82f6" },
+    { name: "Techflecks", email: "aryan@techflecks.com", color: "#ec4899" },
+];
 
 export const MOCK_EMAILS: Email[] = [
     {
@@ -21,6 +27,7 @@ export const MOCK_EMAILS: Email[] = [
         starred: false,
         labels: ["inbox", "updates"],
         category: "inbox",
+        account: "aryan@mobintix.app"
     },
     {
         id: 2,
@@ -32,6 +39,7 @@ export const MOCK_EMAILS: Email[] = [
         starred: true,
         labels: ["inbox", "social"],
         category: "inbox",
+        account: "aryan@mobintix.app"
     },
     {
         id: 3,
@@ -43,6 +51,7 @@ export const MOCK_EMAILS: Email[] = [
         starred: false,
         labels: ["inbox", "updates"],
         category: "inbox",
+        account: "aryan@mobintix.app"
     },
     {
         id: 4,
@@ -54,6 +63,7 @@ export const MOCK_EMAILS: Email[] = [
         starred: true,
         labels: ["inbox", "updates"],
         category: "inbox",
+        account: "aryan@techflecks.com"
     },
     {
         id: 5,
@@ -65,6 +75,7 @@ export const MOCK_EMAILS: Email[] = [
         starred: false,
         labels: ["inbox"],
         category: "inbox",
+        account: "aryan@techflecks.com"
     },
     {
         id: 6,
@@ -76,6 +87,7 @@ export const MOCK_EMAILS: Email[] = [
         starred: true,
         labels: ["work"],
         category: "inbox",
+        account: "aryan@mobintix.app"
     },
     {
         id: 7,
@@ -87,6 +99,7 @@ export const MOCK_EMAILS: Email[] = [
         starred: false,
         labels: ["updates"],
         category: "updates",
+        account: "aryan@techflecks.com"
     },
     {
         id: 8,
@@ -98,24 +111,29 @@ export const MOCK_EMAILS: Email[] = [
         starred: false,
         labels: ["spam"],
         category: "spam",
+        account: "aryan@mobintix.app"
     }
 ];
 
-export async function getEmails(category: string): Promise<Email[]> {
+export async function getEmails(category: string, emailAccount?: string): Promise<Email[]> {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 100));
+
+    let filtered = MOCK_EMAILS;
+
+    if (emailAccount) {
+        filtered = filtered.filter(e => e.account === emailAccount);
+    }
 
     const normalizedCategory = category.toLowerCase();
 
     if (normalizedCategory === 'starred') {
-        return MOCK_EMAILS.filter(email => email.starred);
+        return filtered.filter(email => email.starred);
     }
 
-    // Handle other special categories logic if needed, 
-    // otherwise default to matching the 'category' field or label
     if (normalizedCategory === 'inbox' || !normalizedCategory) {
-        return MOCK_EMAILS.filter(email => email.category === 'inbox');
+        return filtered.filter(email => email.category === 'inbox');
     }
 
-    return MOCK_EMAILS.filter(email => email.category === normalizedCategory || email.labels.includes(normalizedCategory));
+    return filtered.filter(email => email.category === normalizedCategory || email.labels.includes(normalizedCategory));
 }

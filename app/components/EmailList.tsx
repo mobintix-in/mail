@@ -1,198 +1,136 @@
 "use client";
 
-import { Star, Square, Archive, Trash2, Mail, Clock } from "lucide-react";
+import { Star, Square, Archive, Trash2, Mail, Clock, RefreshCw, MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
 import { Email } from "../../lib/data";
+import { cn } from "../../lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface EmailListProps {
-  title?: string;
   emails: Email[];
+  isLoading?: boolean;
 }
 
-export default function EmailList({ title = "Inbox", emails }: EmailListProps) {
+export default function EmailList({ emails, isLoading }: EmailListProps) {
   return (
-    <div className="email-list-container glass-panel">
-      <div className="toolbar">
-        <h2 className="toolbar-title">{title}</h2>
-        <div className="toolbar-actions">
-          <button className="icon-btn tool" aria-label="Select all"><Square size={18} /></button>
-          <button className="icon-btn tool" aria-label="Archive"><Archive size={18} /></button>
-          <button className="icon-btn tool" aria-label="Delete"><Trash2 size={18} /></button>
-          <button className="icon-btn tool" aria-label="Mark as unread"><Mail size={18} /></button>
-          <button className="icon-btn tool" aria-label="Snooze"><Clock size={18} /></button>
+    <div className="flex flex-col h-full bg-black/40 backdrop-blur-md rounded-tl-3xl border-t border-l border-white/10 overflow-hidden shadow-2xl">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between px-6 py-3 border-b border-white/10">
+        <div className="flex items-center gap-4">
+          <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors">
+            <Square size={20} />
+          </button>
+          <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors">
+            <RefreshCw size={20} />
+          </button>
+          <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors">
+            <MoreVertical size={20} />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <span className="text-xs font-semibold text-white/40 uppercase tracking-widest">
+            1-50 of 1,234
+          </span>
+          <div className="flex items-center gap-1">
+            <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors">
+              <ChevronLeft size={20} />
+            </button>
+            <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors">
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="list">
-        {emails.length === 0 ? (
-          <div className="empty-state">No emails in {title}</div>
+      {/* List */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        {isLoading ? (
+          <div className="flex items-center justify-center h-64">
+            <RefreshCw className="animate-spin text-primary" size={32} />
+          </div>
+        ) : emails.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-64 text-white/20">
+            <Mail size={48} className="mb-4 opacity-20" />
+            <span className="text-xl font-medium">No emails found</span>
+          </div>
         ) : (
-          emails.map((email) => (
-            <div key={email.id} className={`email-row ${!email.read ? "unread" : ""}`}>
-              <div className="actions">
-                <button className="checkbox" aria-label="Select"><Square size={18} /></button>
-                <button className={`star ${email.starred ? "starred" : ""}`} aria-label="Star">
-                  <Star size={18} fill={email.starred ? "currentColor" : "none"} />
-                </button>
-              </div>
+          <div className="divide-y divide-white/5">
+            {emails.map((email, index) => (
+              <motion.div
+                key={email.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className={cn(
+                  "group flex items-center px-6 py-3 cursor-pointer transition-all hover:bg-white/[0.03] relative",
+                  !email.read && "bg-white/[0.01]"
+                )}
+              >
+                {!email.read && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[2px_0_10px_rgba(59,130,246,0.5)]" />
+                )}
 
-              <div className="sender">{email.sender}</div>
+                <div className="flex items-center gap-4 mr-6 flex-shrink-0">
+                  <button className="text-white/20 hover:text-white transition-colors">
+                    <Square size={20} />
+                  </button>
+                  <button className={cn(
+                    "transition-colors",
+                    email.starred ? "text-yellow-400" : "text-white/20 hover:text-white"
+                  )}>
+                    <Star size={20} fill={email.starred ? "currentColor" : "none"} />
+                  </button>
+                </div>
 
-              <div className="content">
-                <span className="subject">{email.subject}</span>
-                <span className="separator">-</span>
-                <span className="snippet">{email.snippet}</span>
-              </div>
+                <div className={cn(
+                  "w-48 flex-shrink-0 truncate text-[0.95rem]",
+                  !email.read ? "font-bold text-white" : "font-medium text-white/60"
+                )}>
+                  {email.sender}
+                </div>
 
-              <div className="time">{email.time}</div>
-            </div>
-          ))
+                <div className="flex-1 flex items-center gap-2 truncate pr-12">
+                  <span className={cn(
+                    "text-[0.95rem] truncate",
+                    !email.read ? "font-bold text-white" : "text-white/90"
+                  )}>
+                    {email.subject}
+                  </span>
+                  <span className="text-white/40 text-[0.95rem]">-</span>
+                  <span className="text-white/40 text-[0.95rem] truncate max-w-md">
+                    {email.snippet}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-4 flex-shrink-0">
+                  {/* Hover Actions */}
+                  <div className="hidden group-hover:flex items-center gap-1">
+                    <button className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors">
+                      <Archive size={18} />
+                    </button>
+                    <button className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors">
+                      <Trash2 size={18} />
+                    </button>
+                    <button className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors">
+                      <Mail size={18} />
+                    </button>
+                    <button className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors">
+                      <Clock size={18} />
+                    </button>
+                  </div>
+
+                  <span className={cn(
+                    "text-xs font-bold w-16 text-right group-hover:hidden",
+                    !email.read ? "text-white" : "text-white/40"
+                  )}>
+                    {email.time}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         )}
       </div>
-
-      <style jsx>{`
-        .email-list-container {
-          flex: 1;
-          margin: 0 1rem 1rem 0;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          border-top-left-radius: 16px; /* Matches sidebar aesthetic */
-          border-top-right-radius: 16px;
-        }
-
-        .toolbar {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0.75rem 1rem;
-          border-bottom: 1px solid var(--card-border);
-        }
-
-        .toolbar-title {
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: var(--primary);
-        }
-
-        .toolbar-actions {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .tool {
-          padding: 0.5rem;
-          color: rgba(237, 237, 237, 0.7);
-          border-radius: 4px;
-        }
-        
-        .tool:hover {
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-        }
-
-        .list {
-          flex: 1;
-          overflow-y: auto;
-        }
-
-        .empty-state {
-            padding: 4rem;
-            text-align: center;
-            opacity: 0.5;
-            font-size: 1.2rem;
-        }
-
-        .email-row {
-          display: flex;
-          align-items: center;
-          padding: 0.75rem 1rem;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-          cursor: pointer;
-          transition: background 0.1s;
-          font-size: 0.95rem;
-        }
-
-        .email-row:hover {
-          background: rgba(255, 255, 255, 0.05);
-          box-shadow: inset 1px 0 0 var(--card-border), inset -1px 0 0 var(--card-border); /* Subtle border effect */
-          z-index: 1;
-        }
-
-        .unread {
-          background: rgba(255, 255, 255, 0.02);
-          font-weight: 700;
-          color: white;
-        }
-        
-        .unread .sender, .unread .subject {
-           font-weight: 700;
-        }
-        
-        .sender {
-          width: 200px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          opacity: 0.9;
-        }
-
-        .content {
-          flex: 1;
-          display: flex;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          margin-right: 1rem;
-        }
-
-        .subject {
-          margin-right: 0.5rem;
-        }
-
-        .separator {
-          margin-right: 0.5rem;
-          opacity: 0.5;
-        }
-
-        .snippet {
-          opacity: 0.6;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .time {
-          font-size: 0.8rem;
-          font-weight: 600;
-          opacity: 0.7;
-          width: 70px;
-          text-align: right;
-        }
-
-        .actions {
-          display: flex;
-          gap: 0.5rem;
-          margin-right: 1rem;
-          color: rgba(237, 237, 237, 0.3);
-        }
-        
-        .checkbox:hover, .star:hover {
-          color: rgba(237, 237, 237, 0.8);
-        }
-
-        .star.starred {
-            color: #facc15; /* Yellow/Gold for starred */
-        }
-
-        button {
-          background: none;
-          border: none;
-          color: inherit;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          padding: 0;
-        }
-      `}</style>
     </div>
   );
 }
