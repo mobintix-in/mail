@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Menu, Settings, HelpCircle, Bell, User, ChevronDown, Check } from "lucide-react";
+import { Search, Menu, Settings, HelpCircle, Bell, User, ChevronDown, Check, X } from "lucide-react";
 import { useState } from "react";
 import { useMail } from "../context/MailContext";
 import { ACCOUNTS } from "../../lib/data";
@@ -8,60 +8,93 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../../lib/utils";
 
 export default function Header() {
-  const { selectedAccount, setSelectedAccount } = useMail();
+  const { selectedAccount, setSelectedAccount, isSidebarOpen, setIsSidebarOpen } = useMail();
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   return (
-    <header className="h-16 flex items-center justify-between px-4 sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/10">
-      <div className="flex items-center gap-4 min-w-[240px]">
-        <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+    <header className="h-16 flex items-center justify-between px-2 md:px-4 sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/10">
+      {/* Left section: Menu & Logo */}
+      <div className={cn(
+        "flex items-center gap-2 md:gap-4 min-w-fit md:min-w-[240px]",
+        isSearchExpanded && "hidden sm:flex"
+      )}>
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="p-2 hover:bg-white/10 rounded-full transition-colors"
+        >
           <Menu size={24} />
         </button>
         <div className="flex items-center gap-2 cursor-pointer group">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-lg shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
             M
           </div>
-          <span className="text-xl font-bold tracking-tight">Mail</span>
+          <span className="text-xl font-bold tracking-tight hidden xs:block">Mail</span>
         </div>
       </div>
 
-      <div className="flex-1 max-w-2xl mx-8">
-        <div className="relative group focus-within:scale-[1.01] transition-transform">
+      {/* Center section: Search */}
+      <div className={cn(
+        "flex-1 max-w-2xl mx-2 md:mx-8 transition-all duration-300",
+        isSearchExpanded ? "absolute inset-x-0 px-4 z-50 bg-background h-16 flex items-center" : "relative"
+      )}>
+        <div className="relative group w-full">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-primary transition-colors">
             <Search size={20} />
           </div>
           <input
             type="text"
             placeholder="Search mail"
-            className="w-full bg-white/5 border border-white/5 rounded-2xl py-2.5 pl-11 pr-4 outline-none focus:bg-white/10 focus:border-primary/50 transition-all text-[0.95rem]"
+            onFocus={() => setIsSearchExpanded(true)}
+            onBlur={() => setTimeout(() => setIsSearchExpanded(false), 200)}
+            className={cn(
+              "w-full bg-white/5 border border-white/5 rounded-2xl py-2.5 pl-11 pr-10 outline-none focus:bg-white/10 focus:border-primary/50 transition-all text-[0.95rem]",
+              isSearchExpanded && "bg-white/10 border-primary/50"
+            )}
           />
+          {isSearchExpanded && (
+            <button
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
+              onClick={() => setIsSearchExpanded(false)}
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
-          <HelpCircle size={22} />
-        </button>
-        <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
-          <Settings size={22} />
-        </button>
-        <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
-          <Bell size={22} />
-        </button>
+      {/* Right section: Icons & Account */}
+      <div className={cn(
+        "flex items-center gap-1 md:gap-2",
+        isSearchExpanded && "hidden sm:flex"
+      )}>
+        <div className="hidden lg:flex items-center gap-1">
+          <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
+            <HelpCircle size={22} />
+          </button>
+          <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
+            <Settings size={22} />
+          </button>
+          <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
+            <Bell size={22} />
+          </button>
+        </div>
 
-        <div className="relative ml-2">
+        <div className="relative ml-1 md:ml-2">
           <button
             onClick={() => setShowAccountSwitcher(!showAccountSwitcher)}
-            className="flex items-center gap-2 p-1 pl-1 pr-3 rounded-full hover:bg-white/10 transition-colors border border-white/5"
+            className="flex items-center gap-2 p-1 md:pr-3 rounded-full hover:bg-white/10 transition-colors border border-white/5"
           >
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-inner"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-inner flex-shrink-0"
               style={{ backgroundColor: selectedAccount.color }}
             >
               {selectedAccount.name[0]}
             </div>
-            <span className="text-sm font-medium hidden md:block">{selectedAccount.email}</span>
-            <ChevronDown size={14} className={cn("transition-transform", showAccountSwitcher && "rotate-180")} />
+            <span className="text-sm font-medium hidden md:block max-w-[120px] truncate">
+              {selectedAccount.email.split('@')[0]}
+            </span>
+            <ChevronDown size={14} className={cn("transition-transform hidden xs:block", showAccountSwitcher && "rotate-180")} />
           </button>
 
           <AnimatePresence>

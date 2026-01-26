@@ -10,6 +10,8 @@ interface MailContextType {
     setSelectedCategory: (category: string) => void;
     isComposeOpen: boolean;
     setIsComposeOpen: (isOpen: boolean) => void;
+    isSidebarOpen: boolean;
+    setIsSidebarOpen: (isOpen: boolean) => void;
 }
 
 const MailContext = createContext<MailContextType | undefined>(undefined);
@@ -18,6 +20,7 @@ export function MailProvider({ children }: { children: ReactNode }) {
     const [selectedAccount, setSelectedAccount] = useState(ACCOUNTS[0]);
     const [selectedCategory, setSelectedCategory] = useState("inbox");
     const [isComposeOpen, setIsComposeOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     return (
         <MailContext.Provider
@@ -28,6 +31,8 @@ export function MailProvider({ children }: { children: ReactNode }) {
                 setSelectedCategory,
                 isComposeOpen,
                 setIsComposeOpen,
+                isSidebarOpen,
+                setIsSidebarOpen,
             }}
         >
             {children}
