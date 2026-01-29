@@ -119,7 +119,7 @@ export default function LoginPage() {
                 </div>
 
                 <p className="mt-8 text-center text-white/40 text-sm">
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <button className="text-white font-bold hover:text-primary transition-colors underline underline-offset-4 decoration-primary/30 hover:decoration-primary">
                         Create account
                     </button>

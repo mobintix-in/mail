@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, Bell, Shield, Palette, Mail, Smartphone, ChevronRight, ToggleRight, Moon, Monitor, Settings } from "lucide-react";
+import { User, Bell, Shield, Palette, Mail, ToggleRight, Moon, Monitor, Settings } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../../lib/utils";
 

@@ -1,3 +1,5 @@
+import { ElementType } from "react";
+
 export interface User {
     id: string;
     name: string;
@@ -39,7 +41,7 @@ export type EmailCategory =
 
 export interface NavItem {
     id: string;
-    icon: any;
+    icon: ElementType;
     label: string;
     count?: number;
     href: string;
