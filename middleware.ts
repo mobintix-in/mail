@@ -8,13 +8,15 @@ export function middleware(request: NextRequest) {
     const hasUserSession = request.cookies.has('auth_session');
     const hasAdminSession = request.cookies.has('admin_auth_session');
 
-    // 2. Define Admin Protection
-    // 2. Admin Protection (Removed as requested)
-    // if (pathname.startsWith('/admin')) { ... }
+    // 2. Admin Protection
+    if (pathname.startsWith('/admin') && !hasAdminSession) {
+        return NextResponse.redirect(new URL('/login', request.url));
+    }
 
     // 3. Define User App Protection
     const isAuthPage = pathname === '/login';
-    const isUserProtectedRoute = pathname === '/' ||
+    const isUserProtectedRoute =
+        pathname === '/' ||
         pathname.startsWith('/inbox') ||
         pathname.startsWith('/starred') ||
         pathname.startsWith('/sent') ||

@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, Github, Chrome, ArrowRight, CheckCircle2 } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { Mail, Lock, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -15,6 +14,11 @@ export default function LoginPage() {
 
         // Simulating a production auth flow
         document.cookie = "auth_session=true; path=/; max-age=3600; SameSite=Lax";
+
+        // Check for Admin access
+        if (email === "aryan@mobintix.app") {
+            document.cookie = "admin_auth_session=true; path=/; max-age=3600; SameSite=Lax";
+        }
 
         setTimeout(() => {
             window.location.href = "/";
@@ -111,17 +115,6 @@ export default function LoginPage() {
                         <div className="relative flex justify-center text-xs uppercase">
                             <span className="bg-[#121212] px-4 text-white/30 font-medium tracking-widest">Or continue with</span>
                         </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <button className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/5 py-3 rounded-2xl transition-all text-sm font-semibold text-white/80">
-                            <Chrome size={18} />
-                            <span>Google</span>
-                        </button>
-                        <button className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/5 py-3 rounded-2xl transition-all text-sm font-semibold text-white/80">
-                            <Github size={18} />
-                            <span>GitHub</span>
-                        </button>
                     </div>
                 </div>
 
