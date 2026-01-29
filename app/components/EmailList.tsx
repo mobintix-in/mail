@@ -12,7 +12,7 @@ interface EmailListProps {
 
 export default function EmailList({ emails, isLoading }: EmailListProps) {
   return (
-    <div className="flex flex-col h-full bg-black/40 backdrop-blur-md lg:rounded-tl-3xl border-t border-white/10 overflow-hidden shadow-2xl">
+    <div className="flex flex-col h-full bg-black/40 backdrop-blur-md lg:rounded-tl-3xl overflow-hidden shadow-2xl">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-3 md:px-6 py-2 md:py-3 border-b border-white/10">
         <div className="flex items-center gap-1 md:gap-4">

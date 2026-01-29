@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Menu, Settings, HelpCircle, Bell, User, ChevronDown, Check, X, LogOut } from "lucide-react";
+import { Search, Menu, Settings, HelpCircle, Bell, User, ChevronDown, Check, X, LogOut, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { useMail } from "../context/MailContext";
 import { ACCOUNTS } from "../../lib/data";
@@ -19,10 +19,10 @@ export default function Header() {
   };
 
   return (
-    <header className="h-16 flex items-center justify-between px-2 md:px-4 sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/10">
+    <header className="h-16 grid grid-cols-[auto_1fr_auto] md:grid-cols-[1fr_minmax(auto,42rem)_1fr] items-center px-2 md:px-4 sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/10 gap-2 md:gap-4">
       {/* Left section: Menu & Logo */}
       <div className={cn(
-        "flex items-center gap-2 md:gap-4 min-w-fit md:min-w-[240px]",
+        "flex items-center gap-2 md:gap-4 justify-self-start",
         isSearchExpanded && "hidden sm:flex"
       )}>
         <button
@@ -41,10 +41,10 @@ export default function Header() {
 
       {/* Center section: Search */}
       <div className={cn(
-        "flex-1 max-w-2xl mx-2 md:mx-8 transition-all duration-300",
-        isSearchExpanded ? "absolute inset-x-0 px-4 z-50 bg-background h-16 flex items-center" : "relative"
+        "w-full transition-all duration-300",
+        isSearchExpanded ? "absolute inset-x-0 px-4 z-50 bg-background h-16 flex items-center" : "relative col-span-1"
       )}>
-        <div className="relative group w-full">
+        <div className="relative group w-full max-w-2xl mx-auto">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-primary transition-colors">
             <Search size={20} />
           </div>
@@ -54,24 +54,35 @@ export default function Header() {
             onFocus={() => setIsSearchExpanded(true)}
             onBlur={() => setTimeout(() => setIsSearchExpanded(false), 200)}
             className={cn(
-              "w-full bg-white/5 border border-white/5 rounded-2xl py-2.5 pl-11 pr-10 outline-none focus:bg-white/10 focus:border-primary/50 transition-all text-[0.95rem]",
-              isSearchExpanded && "bg-white/10 border-primary/50"
+              "w-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-full py-3 pl-12 pr-28 outline-none transition-all duration-300 text-[0.95rem] placeholder:text-white/40 shadow-inner",
+              "focus:bg-white/10 focus:border-primary/30 focus:ring-1 focus:ring-primary/20",
             )}
           />
-          {isSearchExpanded && (
-            <button
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
-              onClick={() => setIsSearchExpanded(false)}
-            >
-              <X size={18} />
-            </button>
-          )}
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            {!isSearchExpanded ? (
+              <>
+                <div className="hidden md:flex items-center gap-1 px-2 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] text-white/50 font-mono font-medium">
+                  <span className="text-xs">⌘</span>K
+                </div>
+                <button className="p-1.5 hover:bg-white/10 rounded-full text-white/50 hover:text-white transition-colors">
+                  <SlidersHorizontal size={16} />
+                </button>
+              </>
+            ) : (
+              <button
+                className="p-1.5 hover:bg-white/10 rounded-full text-white/50 hover:text-white"
+                onClick={() => setIsSearchExpanded(false)}
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Right section: Icons & Account */}
       <div className={cn(
-        "flex items-center gap-1 md:gap-2",
+        "flex items-center gap-1 md:gap-2 justify-self-end",
         isSearchExpanded && "hidden sm:flex"
       )}>
         <div className="hidden lg:flex items-center gap-1">
