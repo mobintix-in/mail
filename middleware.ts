@@ -9,21 +9,8 @@ export function middleware(request: NextRequest) {
     const hasAdminSession = request.cookies.has('admin_auth_session');
 
     // 2. Define Admin Protection
-    if (pathname.startsWith('/admin')) {
-        // Allow the admin login page itself
-        if (pathname === '/admin/login') {
-            if (hasAdminSession) {
-                return NextResponse.redirect(new URL('/admin', request.url));
-            }
-            return NextResponse.next();
-        }
-
-        // Protect all other admin routes
-        if (!hasAdminSession) {
-            return NextResponse.redirect(new URL('/admin/login', request.url));
-        }
-        return NextResponse.next();
-    }
+    // 2. Admin Protection (Removed as requested)
+    // if (pathname.startsWith('/admin')) { ... }
 
     // 3. Define User App Protection
     const isAuthPage = pathname === '/login';
