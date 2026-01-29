@@ -8,8 +8,7 @@ import { cn } from "../../../lib/utils";
 
 const domains = [
     { id: 1, name: "mobintix.app", status: "Active", users: 12, health: "A+", provider: "Cloudflare" },
-    { id: 2, name: "techflecks.com", status: "Pending", users: 5, health: "B", provider: "GoDaddy" },
-    { id: 3, name: "aryanbhimani.in", status: "Active", users: 2, health: "A", provider: "Namecheap" },
+    { id: 2, name: "techflecks.com", status: "Pending", users: 5, health: "B", provider: "GoDaddy" }
 ];
 
 export default function DomainsPage() {
@@ -37,7 +36,7 @@ export default function DomainsPage() {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     {[
-                        { label: "Total Domains", value: "8", icon: Globe, color: "text-blue-500" },
+                        { label: "Total Domains", value: "2", icon: Globe, color: "text-blue-500" },
                         { label: "Active Users", value: "24", icon: Shield, color: "text-green-500" },
                         { label: "Server Load", value: "12%", icon: Server, color: "text-purple-500" },
                     ].map((stat, i) => (

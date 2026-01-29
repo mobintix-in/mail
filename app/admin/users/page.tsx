@@ -9,8 +9,6 @@ import { cn } from "../../../lib/utils";
 const users = [
     { id: 1, name: "Aryan Bhimani", email: "aryan@mobintix.app", domain: "mobintix.app", role: "Owner", lastActive: "Just now" },
     { id: 2, name: "John Doe", email: "john@techflecks.com", domain: "techflecks.com", role: "Admin", lastActive: "2h ago" },
-    { id: 3, name: "Jane Smith", email: "jane@mobintix.app", domain: "mobintix.app", role: "User", lastActive: "1d ago" },
-    { id: 4, name: "Sam Wilson", email: "sam@aryanbhimani.in", domain: "aryanbhimani.in", role: "User", lastActive: "5m ago" },
 ];
 
 export default function UsersPage() {

@@ -69,8 +69,6 @@ export default function AnalyticsPage() {
                             {[
                                 { name: "mobintix.app", share: "58%", color: "bg-primary" },
                                 { name: "techflecks.com", share: "24%", color: "bg-purple-500" },
-                                { name: "aryanbhimani.in", share: "12%", color: "bg-blue-500" },
-                                { name: "Others", share: "6%", color: "bg-white/20" },
                             ].map((domain, i) => (
                                 <div key={i} className="space-y-2">
                                     <div className="flex justify-between text-sm font-medium">
