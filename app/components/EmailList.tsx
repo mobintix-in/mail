@@ -1,7 +1,8 @@
 "use client";
 
-import { Star, Square, Archive, Trash2, Mail, Clock, RefreshCw, MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Square, Archive, Trash2, Mail, Clock, RefreshCw, MoreVertical, ChevronLeft, ChevronRight, MailOpen } from "lucide-react";
 import { Email } from "../../lib/data";
+import { useMail } from "../context/MailContext";
 import { cn } from "../../lib/utils";
 import { motion } from "framer-motion";
 
@@ -11,6 +12,7 @@ interface EmailListProps {
 }
 
 export default function EmailList({ emails, isLoading }: EmailListProps) {
+  const { toggleStar, toggleRead, deleteEmail } = useMail();
   return (
     <div className="flex flex-col h-full bg-black/40 backdrop-blur-md lg:rounded-tl-3xl overflow-hidden shadow-2xl">
       {/* Toolbar */}
@@ -65,6 +67,7 @@ export default function EmailList({ emails, isLoading }: EmailListProps) {
                   "group flex flex-col sm:flex-row sm:items-center px-4 md:px-6 py-3 cursor-pointer transition-all hover:bg-white/[0.03] relative",
                   !email.read && "bg-white/[0.02]"
                 )}
+                onClick={() => toggleRead(email.id)}
               >
                 {!email.read && (
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[2px_0_10px_rgba(59,130,246,0.5)]" />
@@ -75,10 +78,15 @@ export default function EmailList({ emails, isLoading }: EmailListProps) {
                     <button className="text-white/20 hover:text-white transition-colors">
                       <Square size={20} />
                     </button>
-                    <button className={cn(
-                      "transition-colors",
-                      email.starred ? "text-yellow-400" : "text-white/20 hover:text-white"
-                    )}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleStar(email.id);
+                      }}
+                      className={cn(
+                        "transition-colors",
+                        email.starred ? "text-yellow-400" : "text-white/20 hover:text-white"
+                      )}>
                       <Star size={20} fill={email.starred ? "currentColor" : "none"} />
                     </button>
                     <div className={cn(
@@ -119,14 +127,26 @@ export default function EmailList({ emails, isLoading }: EmailListProps) {
                 <div className="hidden sm:flex items-center gap-4 flex-shrink-0 ml-auto sm:ml-0">
                   {/* Hover Actions */}
                   <div className="hidden group-hover:flex items-center gap-1">
-                    <button className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); deleteEmail(email.id); }}
+                      className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors"
+                      title="Archive"
+                    >
                       <Archive size={18} />
                     </button>
-                    <button className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); deleteEmail(email.id); }}
+                      className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors"
+                      title="Delete"
+                    >
                       <Trash2 size={18} />
                     </button>
-                    <button className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors">
-                      <Mail size={18} />
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleRead(email.id); }}
+                      className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors"
+                      title={email.read ? "Mark as unread" : "Mark as read"}
+                    >
+                      {email.read ? <Mail size={18} /> : <MailOpen size={18} />}
                     </button>
                     <button className="p-2 hover:bg-white/10 rounded-full text-white/60 hover:text-white transition-colors">
                       <Clock size={18} />

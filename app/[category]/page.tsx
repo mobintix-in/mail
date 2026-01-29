@@ -13,8 +13,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const resolvedParams = use(params);
   const category = resolvedParams.category;
 
-  const { selectedAccount, setSelectedCategory } = useMail();
-  const [emails, setEmails] = useState<Email[]>([]);
+  const { selectedAccount, setSelectedCategory, searchQuery, emails: contextEmails } = useMail();
   const [loading, setLoading] = useState(true);
 
   // Sync the context state with the URL category for components that rely on context
@@ -23,15 +22,49 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   }, [category, setSelectedCategory]);
 
   useEffect(() => {
-    setLoading(true);
-    getEmails(category, selectedAccount.email)
-      .then(setEmails)
-      .finally(() => setLoading(false));
-  }, [category, selectedAccount]);
+    // Simulate initial loading
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Filter emails based on category/account/search
+  const filteredEmails = contextEmails.filter(email => {
+    // 1. Account Filter
+    if (email.account !== selectedAccount.email) return false;
+
+    // 2. Category/Label Filter
+    const normalizedCategory = category.toLowerCase();
+    let matchesCategory = false;
+
+    if (normalizedCategory === 'starred') {
+      matchesCategory = email.starred;
+    } else if (normalizedCategory === 'inbox') {
+      matchesCategory = email.category === 'inbox';
+    } else {
+      matchesCategory = email.category === normalizedCategory || email.labels.includes(normalizedCategory);
+    }
+
+    if (!matchesCategory) return false;
+
+    // 3. Search Filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return (
+        email.subject.toLowerCase().includes(query) ||
+        email.sender.toLowerCase().includes(query) ||
+        email.snippet.toLowerCase().includes(query)
+      );
+    }
+
+    return true;
+  });
 
   return (
     <div className="h-full overflow-hidden">
-      <EmailList emails={emails} isLoading={loading} />
+      <EmailList
+        emails={filteredEmails}
+        isLoading={loading}
+      />
     </div>
   );
 }

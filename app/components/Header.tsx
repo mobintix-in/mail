@@ -1,6 +1,7 @@
 "use client";
 
 import { Search, Menu, Settings, HelpCircle, Bell, User, ChevronDown, Check, X, LogOut, SlidersHorizontal, Shield } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useMail } from "../context/MailContext";
 import { ACCOUNTS } from "../../lib/data";
@@ -8,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../../lib/utils";
 
 export default function Header() {
-  const { selectedAccount, setSelectedAccount, isSidebarOpen, setIsSidebarOpen } = useMail();
+  const { selectedAccount, setSelectedAccount, isSidebarOpen, setIsSidebarOpen, searchQuery, setSearchQuery } = useMail();
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
@@ -51,6 +52,8 @@ export default function Header() {
           <input
             type="text"
             placeholder="Search mail"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchExpanded(true)}
             onBlur={() => setTimeout(() => setIsSearchExpanded(false), 200)}
             className={cn(
@@ -91,15 +94,12 @@ export default function Header() {
               <Shield size={22} />
             </a>
           )}
-          <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
-            <HelpCircle size={22} />
-          </button>
-          <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
+          <Link href="/settings" className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
             <Settings size={22} />
-          </button>
-          <button className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
+          </Link>
+          <Link href="/notifications" className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
             <Bell size={22} />
-          </button>
+          </Link>
         </div>
 
         <div className="relative ml-1 md:ml-2">

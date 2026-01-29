@@ -4,6 +4,7 @@ import { X, Maximize2, Minimize2, Send, Paperclip, Smile, MoreVertical, Trash2 }
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { cn } from "../../lib/utils";
+import { useMail } from "../context/MailContext";
 
 interface ComposeMailProps {
     isOpen: boolean;
@@ -12,6 +13,25 @@ interface ComposeMailProps {
 
 export default function ComposeMail({ isOpen, onClose }: ComposeMailProps) {
     const [isMaximized, setIsMaximized] = useState(false);
+    const { sendEmail, selectedAccount } = useMail();
+    const [to, setTo] = useState("");
+    const [subject, setSubject] = useState("");
+    const [body, setBody] = useState("");
+
+    const handleSend = () => {
+        sendEmail({
+            sender: "Me", // In a real app this would be the user's name
+            subject: subject || "No Subject",
+            snippet: body.slice(0, 100) || "No content",
+            category: "inbox", // For demo purposes, putting it in inbox to see it immediately
+            account: selectedAccount.email
+        });
+        // Reset and close
+        setTo("");
+        setSubject("");
+        setBody("");
+        onClose();
+    };
 
     return (
         <AnimatePresence>
@@ -49,13 +69,25 @@ export default function ComposeMail({ isOpen, onClose }: ComposeMailProps) {
                     <div className="flex-1 flex flex-col p-4 space-y-4 overflow-y-auto">
                         <div className="border-b border-white/5 pb-2 flex items-center gap-2 shrink-0">
                             <span className="text-white/40 text-sm w-12">To</span>
-                            <input type="text" className="bg-transparent border-none outline-none flex-1 text-sm font-medium" />
+                            <input
+                                type="text"
+                                value={to}
+                                onChange={(e) => setTo(e.target.value)}
+                                className="bg-transparent border-none outline-none flex-1 text-sm font-medium"
+                            />
                         </div>
                         <div className="border-b border-white/5 pb-2 flex items-center gap-2 shrink-0">
                             <span className="text-white/40 text-sm w-12">Subject</span>
-                            <input type="text" className="bg-transparent border-none outline-none flex-1 text-sm font-medium" />
+                            <input
+                                type="text"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                                className="bg-transparent border-none outline-none flex-1 text-sm font-medium"
+                            />
                         </div>
                         <textarea
+                            value={body}
+                            onChange={(e) => setBody(e.target.value)}
                             className="flex-1 bg-transparent border-none outline-none resize-none text-[0.95rem] leading-relaxed min-h-[200px]"
                             placeholder="Write your message here..."
                         />
@@ -64,7 +96,10 @@ export default function ComposeMail({ isOpen, onClose }: ComposeMailProps) {
                     {/* Footer */}
                     <div className="p-4 flex items-center justify-between border-t border-white/10 bg-white/5 shrink-0">
                         <div className="flex items-center gap-1 md:gap-2">
-                            <button className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 md:px-6 py-2 rounded-full font-semibold transition-all shadow-lg shadow-primary/20 scale-90 sm:scale-100 origin-left">
+                            <button
+                                onClick={handleSend}
+                                className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 md:px-6 py-2 rounded-full font-semibold transition-all shadow-lg shadow-primary/20 scale-90 sm:scale-100 origin-left"
+                            >
                                 <span>Send</span>
                                 <Send size={16} />
                             </button>

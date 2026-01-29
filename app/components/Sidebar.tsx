@@ -18,7 +18,14 @@ const navItems = [
 ];
 
 export default function Sidebar() {
-  const { selectedCategory, setSelectedCategory, setIsComposeOpen, isSidebarOpen, setIsSidebarOpen } = useMail();
+  const { selectedCategory, setSelectedCategory, setIsComposeOpen, isSidebarOpen, setIsSidebarOpen, emails, selectedAccount } = useMail();
+
+  const getCount = (id: string) => {
+    if (id === 'inbox') return emails.filter(e => e.account === selectedAccount.email && e.category === 'inbox' && !e.read).length;
+    if (id === 'drafts') return emails.filter(e => e.account === selectedAccount.email && e.category === 'drafts').length;
+    if (id === 'spam') return emails.filter(e => e.account === selectedAccount.email && e.category === 'spam' && !e.read).length;
+    return 0;
+  };
 
   const SidebarContent = (
     <div className="w-full h-full flex flex-col py-4">
@@ -51,6 +58,7 @@ export default function Sidebar() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = selectedCategory === item.id;
+          const count = getCount(item.id);
 
           return (
             <Link
@@ -74,12 +82,12 @@ export default function Sidebar() {
                 className={cn("transition-transform flex-shrink-0", isActive ? "scale-110" : "group-hover:scale-110")}
               />
               {isSidebarOpen && <span className="flex-1 text-left truncate">{item.label}</span>}
-              {isSidebarOpen && item.count && (
+              {isSidebarOpen && count > 0 && (
                 <span className={cn(
                   "text-[0.75rem] px-2 py-0.5 rounded-full font-bold",
                   isActive ? "bg-primary/20" : "bg-white/10"
                 )}>
-                  {item.count}
+                  {count}
                 </span>
               )}
             </Link>
