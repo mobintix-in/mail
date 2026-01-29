@@ -22,7 +22,7 @@ export default function Sidebar() {
 
   const SidebarContent = (
     <div className="w-full h-full flex flex-col py-4">
-      <div className="flex items-center justify-between px-4 mb-4 lg:mb-6">
+      <div className={cn("flex items-center mb-4 lg:mb-6", isSidebarOpen ? "justify-between px-4" : "justify-center px-2")}>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -32,7 +32,7 @@ export default function Sidebar() {
           }}
           className={cn(
             "flex items-center gap-3 bg-[#c2e7ff] hover:bg-[#b3d7ef] text-[#001d35] rounded-2xl font-semibold shadow-lg transition-all",
-            isSidebarOpen ? "px-6 py-4 w-fit" : "p-4 mx-auto"
+            isSidebarOpen ? "px-6 py-4 w-fit" : "p-3"
           )}
         >
           <Plus size={24} />
@@ -41,7 +41,7 @@ export default function Sidebar() {
 
         <button
           onClick={() => setIsSidebarOpen(false)}
-          className="p-2 hover:bg-white/10 rounded-full lg:hidden"
+          className={cn("p-2 hover:bg-white/10 rounded-full lg:hidden", !isSidebarOpen && "hidden")}
         >
           <X size={20} />
         </button>
