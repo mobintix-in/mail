@@ -15,7 +15,10 @@ interface MailContextType {
     searchQuery: string;
     setSearchQuery: (query: string) => void;
     emails: Email[];
-    sendEmail: (email: Omit<Email, 'id' | 'time' | 'read' | 'starred' | 'labels'>) => void;
+    selectedEmail: Email | null;
+    openEmail: (email: Email) => void;
+    closeEmail: () => void;
+    sendEmail: (email: Omit<Email, 'id' | 'time' | 'date' | 'read' | 'starred' | 'labels'>) => void;
     toggleStar: (id: number) => void;
     toggleRead: (id: number) => void;
     deleteEmail: (id: number) => void;
@@ -32,14 +35,28 @@ export function MailProvider({ children }: { children: ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [emails, setEmails] = useState<Email[]>(MOCK_EMAILS);
-    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
 
     // Actions
-    const sendEmail = (newEmail: Omit<Email, 'id' | 'time' | 'read' | 'starred' | 'labels'>) => {
+    const openEmail = (email: Email) => {
+        // Mark email as read when opened
+        setEmails((prev) => prev.map(e =>
+            e.id === email.id ? { ...e, read: true } : e
+        ));
+        // Set selected email with updated read status
+        setSelectedEmail({ ...email, read: true });
+    };
+
+    const closeEmail = () => {
+        setSelectedEmail(null);
+    };
+
+    const sendEmail = (newEmail: Omit<Email, 'id' | 'time' | 'date' | 'read' | 'starred' | 'labels'>) => {
         const email: Email = {
             ...newEmail,
             id: Date.now(),
             time: "Just now",
+            date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
             read: true,
             starred: false,
             labels: ["sent"],
@@ -51,6 +68,10 @@ export function MailProvider({ children }: { children: ReactNode }) {
         setEmails((prev) => prev.map(email =>
             email.id === id ? { ...email, starred: !email.starred } : email
         ));
+        // Update selected email if it's the one being toggled
+        if (selectedEmail?.id === id) {
+            setSelectedEmail(prev => prev ? { ...prev, starred: !prev.starred } : null);
+        }
     };
 
     const toggleRead = (id: number) => {
@@ -63,14 +84,16 @@ export function MailProvider({ children }: { children: ReactNode }) {
         setEmails((prev) => prev.map(email =>
             email.id === id ? { ...email, category: "trash", labels: email.labels.filter(l => l !== 'inbox') } : email
         ));
+        // Close email detail if deleted email was open
+        if (selectedEmail?.id === id) {
+            setSelectedEmail(null);
+        }
     };
 
     const refreshEmails = () => {
-        setIsRefreshing(true);
         // Simulate refresh delay
         setTimeout(() => {
             setEmails([...MOCK_EMAILS]);
-            setIsRefreshing(false);
         }, 500);
     };
 
@@ -92,6 +115,9 @@ export function MailProvider({ children }: { children: ReactNode }) {
                 searchQuery,
                 setSearchQuery,
                 emails,
+                selectedEmail,
+                openEmail,
+                closeEmail,
                 sendEmail,
                 toggleStar,
                 toggleRead,
@@ -112,3 +138,4 @@ export function useMail() {
     }
     return context;
 }
+

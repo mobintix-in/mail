@@ -21,8 +21,10 @@ export default function ComposeMail({ isOpen, onClose }: ComposeMailProps) {
     const handleSend = () => {
         sendEmail({
             sender: "Me", // In a real app this would be the user's name
+            senderEmail: selectedAccount.email,
             subject: subject || "No Subject",
             snippet: body.slice(0, 100) || "No content",
+            body: body || "No content",
             category: "inbox", // For demo purposes, putting it in inbox to see it immediately
             account: selectedAccount.email
         });

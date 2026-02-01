@@ -2,8 +2,10 @@
 
 import { use, useEffect, useState } from "react";
 import EmailList from "../components/EmailList";
-import { getEmails, Email } from "../../lib/data";
+import EmailDetail from "../components/EmailDetail";
+import { Email } from "../../lib/data";
 import { useMail } from "../context/MailContext";
+import { AnimatePresence } from "framer-motion";
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>;
@@ -13,7 +15,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const resolvedParams = use(params);
   const category = resolvedParams.category;
 
-  const { selectedAccount, setSelectedCategory, searchQuery, emails: contextEmails } = useMail();
+  const { selectedAccount, setSelectedCategory, searchQuery, emails: contextEmails, selectedEmail } = useMail();
   const [loading, setLoading] = useState(true);
 
   // Sync the context state with the URL category for components that rely on context
@@ -61,10 +63,18 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <div className="h-full overflow-hidden">
-      <EmailList
-        emails={filteredEmails}
-        isLoading={loading}
-      />
+      <AnimatePresence mode="wait">
+        {selectedEmail ? (
+          <EmailDetail key="detail" />
+        ) : (
+          <EmailList
+            key="list"
+            emails={filteredEmails}
+            isLoading={loading}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+

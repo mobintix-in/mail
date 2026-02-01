@@ -13,7 +13,7 @@ interface EmailListProps {
 }
 
 export default function EmailList({ emails, isLoading }: EmailListProps) {
-  const { toggleStar, toggleRead, deleteEmail, refreshEmails, markAllRead } = useMail();
+  const { toggleStar, toggleRead, deleteEmail, refreshEmails, markAllRead, openEmail } = useMail();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showSelectMenu, setShowSelectMenu] = useState(false);
@@ -254,7 +254,7 @@ export default function EmailList({ emails, isLoading }: EmailListProps) {
                   "group flex flex-col sm:flex-row sm:items-center px-4 md:px-6 py-3 cursor-pointer transition-colors duration-150 hover:bg-white/[0.03] relative will-change-transform",
                   !email.read && "bg-white/[0.02]"
                 )}
-                onClick={() => toggleRead(email.id)}
+                onClick={() => openEmail(email)}
               >
                 {!email.read && (
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[2px_0_10px_rgba(59,130,246,0.5)]" />
