@@ -21,7 +21,7 @@ const colors = [
 
 
 export default function SettingsPage() {
-    const [activeTab, setActiveTab] = useState("general");
+    const [activeTab, setActiveTab] = useState("account");
     const [accentColor, setAccentColor] = useState('blue');
 
     const updateTheme = (colorId: string, rgb: string) => {
@@ -131,21 +131,7 @@ export default function SettingsPage() {
                                 </h2>
 
                                 <div className="space-y-6">
-                                    <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
-                                                <Moon size={20} />
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold text-sm">Dark Mode</p>
-                                                <p className="text-xs text-white/40">Adjust the appearance of the application</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-2 bg-black/40 p-1 rounded-lg border border-white/10">
-                                            <button className="p-2 rounded-md bg-white/10 shadow-sm transition-all"><Moon size={16} /></button>
-                                            <button className="p-2 rounded-md text-white/30 hover:text-white transition-all"><Monitor size={16} /></button>
-                                        </div>
-                                    </div>
+
 
                                     <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
                                         <div className="flex items-center gap-4">
