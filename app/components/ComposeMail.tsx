@@ -40,9 +40,10 @@ export default function ComposeMail({ isOpen, onClose }: ComposeMailProps) {
                     initial={{ y: "100%", opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: "100%", opacity: 0 }}
+                    transition={{ type: "spring", damping: 30, stiffness: 350, mass: 0.8 }}
                     className={cn(
-                        "fixed inset-x-0 bottom-0 z-[100] bg-neutral-900 border-t md:border border-white/10 md:rounded-t-2xl shadow-2xl overflow-hidden flex flex-col transition-all duration-300",
-                        isMaximized ? "inset-0 md:top-8 md:left-8 md:right-8 md:bottom-8 h-full md:h-[calc(100%-4rem)] md:w-[calc(100%-4rem)]" : "md:bottom-0 md:right-8 md:inset-x-auto w-full md:w-[600px] h-full sm:h-[80%] md:h-[600px]"
+                        "fixed bottom-0 right-0 z-[100] bg-neutral-900 border-t md:border border-white/10 md:rounded-t-2xl shadow-2xl overflow-hidden flex flex-col will-change-transform",
+                        isMaximized ? "inset-0 md:top-8 md:left-8 md:right-8 md:bottom-8 h-full md:h-[calc(100%-4rem)] md:w-[calc(100%-4rem)]" : "md:bottom-0 md:right-8 w-full md:w-[600px] h-full sm:h-[80%] md:h-[600px]"
                     )}
                 >
                     {/* Header */}

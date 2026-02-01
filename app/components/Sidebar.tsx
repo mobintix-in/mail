@@ -134,15 +134,16 @@ export default function Sidebar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
               onClick={() => setIsSidebarOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+              className="fixed inset-0 bg-black/60 z-[60]"
             />
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-[280px] bg-neutral-900 border-r border-white/10 z-[70]"
+              transition={{ type: "spring", damping: 30, stiffness: 350, mass: 0.8 }}
+              className="fixed inset-y-0 left-0 w-[280px] bg-neutral-900 border-r border-white/10 z-[70] will-change-transform"
             >
               {/* Force open mode for mobile drawer */}
               <div className="w-full h-full flex flex-col py-4">
