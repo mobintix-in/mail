@@ -55,85 +55,136 @@ export default function SettingsPage() {
 
                     {/* Content Area */}
                     <div className="flex-1 space-y-6">
-                        {/* Example Section 1: Preferences */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="p-6 md:p-8 glass-panel bg-white/[0.03] border border-white/10 rounded-[32px]"
-                        >
-                            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                                <Palette size={20} className="text-primary" />
-                                Appearance
-                            </h2>
-
-                            <div className="space-y-6">
-                                <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
-                                            <Moon size={20} />
-                                        </div>
+                        {activeTab === 'account' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="p-6 md:p-8 glass-panel bg-white/[0.03] border border-white/10 rounded-[32px]"
+                            >
+                                <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                    <User size={20} className="text-primary" />
+                                    Account Information
+                                </h2>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
+                                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white text-2xl font-bold">M</div>
                                         <div>
-                                            <p className="font-semibold text-sm">Dark Mode</p>
-                                            <p className="text-xs text-white/40">Adjust the appearance of the application</p>
+                                            <h3 className="font-semibold text-lg">Mobintix User</h3>
+                                            <p className="text-white/40 text-sm">user@mobintix.app</p>
                                         </div>
+                                        <button className="ml-auto px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-medium transition-colors text-white">Edit</button>
                                     </div>
-                                    <div className="flex items-center gap-2 bg-black/40 p-1 rounded-lg border border-white/10">
-                                        <button className="p-2 rounded-md bg-white/10 shadow-sm transition-all"><Moon size={16} /></button>
-                                        <button className="p-2 rounded-md text-white/30 hover:text-white transition-all"><Monitor size={16} /></button>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                                        <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                                            <p className="text-xs text-white/40 mb-1">Display Name</p>
+                                            <p className="font-medium text-white">Mobintix User</p>
+                                        </div>
+                                        <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                                            <p className="text-xs text-white/40 mb-1">Plan</p>
+                                            <p className="font-medium text-white">Pro Plan</p>
+                                        </div>
                                     </div>
                                 </div>
+                            </motion.div>
+                        )}
 
-                                <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
-                                            <Palette size={20} />
+                        {activeTab === 'appearance' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="p-6 md:p-8 glass-panel bg-white/[0.03] border border-white/10 rounded-[32px]"
+                            >
+                                <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                    <Palette size={20} className="text-primary" />
+                                    Appearance
+                                </h2>
+
+                                <div className="space-y-6">
+                                    <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                                                <Moon size={20} />
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-sm">Dark Mode</p>
+                                                <p className="text-xs text-white/40">Adjust the appearance of the application</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className="font-semibold text-sm">Accent Color</p>
-                                            <p className="text-xs text-white/40">Personalize your workspace theme</p>
+                                        <div className="flex items-center gap-2 bg-black/40 p-1 rounded-lg border border-white/10">
+                                            <button className="p-2 rounded-md bg-white/10 shadow-sm transition-all"><Moon size={16} /></button>
+                                            <button className="p-2 rounded-md text-white/30 hover:text-white transition-all"><Monitor size={16} /></button>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <button className="w-6 h-6 rounded-full bg-blue-500 ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0a]" />
-                                        <button className="w-6 h-6 rounded-full bg-purple-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
-                                        <button className="w-6 h-6 rounded-full bg-green-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
-                                        <button className="w-6 h-6 rounded-full bg-orange-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
+
+                                    <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
+                                                <Palette size={20} />
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-sm">Accent Color</p>
+                                                <p className="text-xs text-white/40">Personalize your workspace theme</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <button className="w-6 h-6 rounded-full bg-blue-500 ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0a]" />
+                                            <button className="w-6 h-6 rounded-full bg-purple-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
+                                            <button className="w-6 h-6 rounded-full bg-green-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
+                                            <button className="w-6 h-6 rounded-full bg-orange-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </motion.div>
+                            </motion.div>
+                        )}
 
-                        {/* Example Section 2: Account */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="p-6 md:p-8 glass-panel bg-white/[0.03] border border-white/10 rounded-[32px]"
-                        >
-                            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                                <Mail size={20} className="text-primary" />
-                                Email Preferences
-                            </h2>
+                        {activeTab === 'general' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                                className="p-6 md:p-8 glass-panel bg-white/[0.03] border border-white/10 rounded-[32px]"
+                            >
+                                <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                    <Mail size={20} className="text-primary" />
+                                    Email Preferences
+                                </h2>
 
-                            <div className="space-y-1">
-                                {[
-                                    { label: "Smart Reply", desc: "Show suggested replies when available" },
-                                    { label: "Desktop Notifications", desc: "Get notified when a new message arrives" },
-                                    { label: "Keyboard Shortcuts", desc: "Enable advanced keyboard shortcuts" },
-                                    { label: "External Images", desc: "Ask before displaying external images" }
-                                ].map((item, i) => (
-                                    <div key={i} className="flex items-center justify-between py-4 border-b border-white/5 last:border-0 hover:bg-white/[0.02] px-2 rounded-xl transition-colors">
-                                        <div>
-                                            <p className="text-sm font-medium text-white/90">{item.label}</p>
-                                            <p className="text-xs text-white/40">{item.desc}</p>
+                                <div className="space-y-1">
+                                    {[
+                                        { label: "Smart Reply", desc: "Show suggested replies when available" },
+                                        { label: "Desktop Notifications", desc: "Get notified when a new message arrives" },
+                                        { label: "Keyboard Shortcuts", desc: "Enable advanced keyboard shortcuts" },
+                                        { label: "External Images", desc: "Ask before displaying external images" }
+                                    ].map((item, i) => (
+                                        <div key={i} className="flex items-center justify-between py-4 border-b border-white/5 last:border-0 hover:bg-white/[0.02] px-2 rounded-xl transition-colors">
+                                            <div>
+                                                <p className="text-sm font-medium text-white/90">{item.label}</p>
+                                                <p className="text-xs text-white/40">{item.desc}</p>
+                                            </div>
+                                            <button className="text-primary hover:text-primary-hover transition-colors">
+                                                <ToggleRight size={32} className={i === 3 ? "text-white/20 rotate-180" : "text-primary"} />
+                                            </button>
                                         </div>
-                                        <button className="text-primary hover:text-primary-hover transition-colors">
-                                            <ToggleRight size={32} className={i === 3 ? "text-white/20 rotate-180" : "text-primary"} />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </motion.div>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        )}
+
+                        {activeTab === 'security' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="p-6 md:p-8 glass-panel bg-white/[0.03] border border-white/10 rounded-[32px]"
+                            >
+                                <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                    <Shield size={20} className="text-primary" />
+                                    Security & Privacy
+                                </h2>
+                                <div className="flex items-center justify-center py-12 text-white/40">
+                                    <p>Security settings unavailable in demo.</p>
+                                </div>
+                            </motion.div>
+                        )}
                     </div>
                 </div>
             </div>
