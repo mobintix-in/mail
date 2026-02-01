@@ -6,7 +6,7 @@ import { useMail } from "../context/MailContext";
 import { cn } from "../../lib/utils";
 
 export default function EmailDetail() {
-    const { selectedEmail, closeEmail, toggleStar, toggleRead, deleteEmail } = useMail();
+    const { selectedEmail, closeEmail, toggleStar, toggleRead, deleteEmail, setIsComposeOpen } = useMail();
 
     if (!selectedEmail) return null;
 
@@ -16,6 +16,25 @@ export default function EmailDetail() {
 
     const handleToggleRead = () => {
         toggleRead(selectedEmail.id);
+    };
+
+    const handleReply = () => {
+        // Open compose with reply info
+        setIsComposeOpen(true);
+    };
+
+    const handleReplyAll = () => {
+        // Open compose with reply all info
+        setIsComposeOpen(true);
+    };
+
+    const handleForward = () => {
+        // Open compose with forward info
+        setIsComposeOpen(true);
+    };
+
+    const handleArchive = () => {
+        deleteEmail(selectedEmail.id);
     };
 
     return (
@@ -37,7 +56,7 @@ export default function EmailDetail() {
                         <ArrowLeft size={20} />
                     </button>
                     <button
-                        onClick={() => deleteEmail(selectedEmail.id)}
+                        onClick={handleArchive}
                         className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors"
                         title="Archive"
                     >
@@ -60,7 +79,11 @@ export default function EmailDetail() {
                 </div>
 
                 <div className="flex items-center gap-1 md:gap-2">
-                    <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors hidden sm:block">
+                    <button
+                        onClick={() => window.print()}
+                        className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors hidden sm:block"
+                        title="Print"
+                    >
                         <Printer size={20} />
                     </button>
                     <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors hidden sm:block">
@@ -114,6 +137,7 @@ export default function EmailDetail() {
                                         ? "text-yellow-400 hover:bg-yellow-500/20"
                                         : "text-white/40 hover:text-white hover:bg-white/5"
                                 )}
+                                title={selectedEmail.starred ? "Unstar" : "Star"}
                             >
                                 <Star size={20} fill={selectedEmail.starred ? "currentColor" : "none"} />
                             </button>
@@ -132,15 +156,24 @@ export default function EmailDetail() {
             {/* Reply Footer */}
             <div className="p-4 md:p-6 border-t border-white/10 bg-black/20 shrink-0">
                 <div className="flex items-center gap-2 md:gap-3 max-w-4xl mx-auto">
-                    <button className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all">
+                    <button
+                        onClick={handleReply}
+                        className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all"
+                    >
                         <Reply size={18} />
                         <span className="text-sm font-medium">Reply</span>
                     </button>
-                    <button className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all hidden sm:flex">
+                    <button
+                        onClick={handleReplyAll}
+                        className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all hidden sm:flex"
+                    >
                         <ReplyAll size={18} />
                         <span className="text-sm font-medium">Reply All</span>
                     </button>
-                    <button className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all">
+                    <button
+                        onClick={handleForward}
+                        className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all"
+                    >
                         <Forward size={18} />
                         <span className="text-sm font-medium">Forward</span>
                     </button>
@@ -149,3 +182,4 @@ export default function EmailDetail() {
         </motion.div>
     );
 }
+

@@ -137,3 +137,62 @@ a {
 .glass {
   @apply bg-white/5 backdrop-blur-md border border-white/10;
 }
+
+/* Print Styles */
+@media print {
+  @page {
+    margin: 2cm;
+  }
+
+  /* Structural Hiding */
+  .no-print,
+  button,
+  [class*="Compose"],
+  header,
+  nav,
+  aside {
+    display: none !important;
+  }
+
+  /* Layout Reset */
+  body,
+  .app-container,
+  .main-body,
+  .content-area,
+  main {
+    background: white !important;
+    background-image: none !important;
+    color: black !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    position: static !important;
+    display: block !important;
+  }
+
+  /* Typography & Content */
+  * {
+    color: black !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure email body is readable */
+  .prose,
+  .prose * {
+    color: black !important;
+  }
+
+  /* Links */
+  a {
+    text-decoration: underline;
+    color: #0066cc !important;
+  }
+
+  /* Hide scrollbars */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}

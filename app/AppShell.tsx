@@ -17,14 +17,20 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return (
         <MailProvider>
             <div className="app-container h-screen flex flex-col overflow-hidden">
-                <Header />
+                <div className="no-print">
+                    <Header />
+                </div>
                 <div className="main-body flex flex-1 overflow-hidden">
-                    <Sidebar />
+                    <div className="no-print">
+                        <Sidebar />
+                    </div>
                     <main className="content-area flex-1 relative overflow-hidden bg-black/20">
                         {children}
                     </main>
                 </div>
-                <ComposeContainer />
+                <div className="no-print">
+                    <ComposeContainer />
+                </div>
             </div>
         </MailProvider>
     );

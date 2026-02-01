@@ -78,6 +78,10 @@ export function MailProvider({ children }: { children: ReactNode }) {
         setEmails((prev) => prev.map(email =>
             email.id === id ? { ...email, read: !email.read } : email
         ));
+        // Update selected email if it's the one being toggled
+        if (selectedEmail?.id === id) {
+            setSelectedEmail(prev => prev ? { ...prev, read: !prev.read } : null);
+        }
     };
 
     const deleteEmail = (id: number) => {
