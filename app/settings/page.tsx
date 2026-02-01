@@ -8,7 +8,6 @@ import { cn } from "../../lib/utils";
 const tabs = [
     { id: "account", label: "Account", icon: User },
     { id: "general", label: "General", icon: Settings },
-    { id: "notifications", label: "Notifications", icon: Bell },
     { id: "security", label: "Security & Privacy", icon: Shield },
     { id: "appearance", label: "Appearance", icon: Palette },
 ];

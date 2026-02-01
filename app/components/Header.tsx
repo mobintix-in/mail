@@ -88,20 +88,6 @@ export default function Header() {
         "flex items-center gap-1 md:gap-2 justify-self-end",
         isSearchExpanded && "hidden sm:flex"
       )}>
-        <div className="hidden lg:flex items-center gap-1">
-          {selectedAccount.email === 'aryan@mobintix.app' && (
-            <a href="/admin" className="p-2 hover:bg-white/10 rounded-full text-blue-400 hover:text-blue-300 transition-colors" title="Admin Panel">
-              <Shield size={22} />
-            </a>
-          )}
-          <Link href="/settings" className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
-            <Settings size={22} />
-          </Link>
-          <Link href="/notifications" className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors">
-            <Bell size={22} />
-          </Link>
-        </div>
-
         <div className="relative ml-1 md:ml-2">
           <button
             onClick={() => setShowAccountSwitcher(!showAccountSwitcher)}

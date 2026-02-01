@@ -1,6 +1,6 @@
 "use client";
 
-import { Inbox, Star, Clock, Send, File, ChevronDown, Plus, CalendarDays, AlertOctagon, Trash2, X } from "lucide-react";
+import { Inbox, Star, Clock, Send, File, ChevronDown, Plus, CalendarDays, AlertOctagon, Trash2, X, Shield, Settings, Bell } from "lucide-react";
 import { useMail } from "../context/MailContext";
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -95,21 +95,22 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {isSidebarOpen && (
-        <div className="mt-4 pt-4 border-t border-white/5 px-4">
-          <h3 className="text-xs font-bold text-white/30 uppercase tracking-[0.2em] mb-4 pl-2">Labels</h3>
-          <div className="space-y-1">
-            <button className="w-full flex items-center gap-3 px-4 py-2 text-[0.925rem] text-white/70 hover:bg-white/5 rounded-full group">
-              <div className="w-2 h-2 rounded-full bg-blue-500 group-hover:scale-150 transition-transform" />
-              <span className="truncate">Work</span>
-            </button>
-            <button className="w-full flex items-center gap-3 px-4 py-2 text-[0.925rem] text-white/70 hover:bg-white/5 rounded-full group">
-              <div className="w-2 h-2 rounded-full bg-pink-500 group-hover:scale-150 transition-transform" />
-              <span className="truncate">Design</span>
-            </button>
-          </div>
-        </div>
-      )}
+      <div className={cn(
+        "hidden lg:flex gap-1 border-t border-white/5 mt-auto",
+        isSidebarOpen ? "items-center px-4 py-2" : "flex-col items-center px-2 py-3"
+      )}>
+        {selectedAccount.email === 'aryan@mobintix.app' && (
+          <a href="/admin" className="p-2 hover:bg-white/10 rounded-full text-blue-400 hover:text-blue-300 transition-colors" title="Admin Panel">
+            <Shield size={20} />
+          </a>
+        )}
+        <Link href="/notifications" className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors" title="Notifications">
+          <Bell size={20} />
+        </Link>
+        <Link href="/settings" className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors" title="Settings">
+          <Settings size={20} />
+        </Link>
+      </div>
     </div>
   );
 
@@ -187,6 +188,33 @@ export default function Sidebar() {
                     );
                   })}
                 </nav>
+
+                <div className="flex items-center gap-1 px-4 py-3 border-t border-white/5 mt-auto">
+                  {selectedAccount.email === 'aryan@mobintix.app' && (
+                    <a
+                      href="/admin"
+                      onClick={() => setIsSidebarOpen(false)}
+                      className="p-2 hover:bg-white/10 rounded-full text-blue-400 hover:text-blue-300 transition-colors"
+                      title="Admin Panel"
+                    >
+                      <Shield size={20} />
+                    </a>
+                  )}
+                  <Link
+                    href="/settings"
+                    onClick={() => setIsSidebarOpen(false)}
+                    className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors"
+                  >
+                    <Settings size={20} />
+                  </Link>
+                  <Link
+                    href="/notifications"
+                    onClick={() => setIsSidebarOpen(false)}
+                    className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors"
+                  >
+                    <Bell size={20} />
+                  </Link>
+                </div>
               </div>
             </motion.aside>
           </div>

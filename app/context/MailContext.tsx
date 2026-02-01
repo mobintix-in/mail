@@ -19,6 +19,8 @@ interface MailContextType {
     toggleStar: (id: number) => void;
     toggleRead: (id: number) => void;
     deleteEmail: (id: number) => void;
+    refreshEmails: () => void;
+    markAllRead: () => void;
 }
 
 const MailContext = createContext<MailContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ export function MailProvider({ children }: { children: ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [emails, setEmails] = useState<Email[]>(MOCK_EMAILS);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Actions
     const sendEmail = (newEmail: Omit<Email, 'id' | 'time' | 'read' | 'starred' | 'labels'>) => {
@@ -62,6 +65,19 @@ export function MailProvider({ children }: { children: ReactNode }) {
         ));
     };
 
+    const refreshEmails = () => {
+        setIsRefreshing(true);
+        // Simulate refresh delay
+        setTimeout(() => {
+            setEmails([...MOCK_EMAILS]);
+            setIsRefreshing(false);
+        }, 500);
+    };
+
+    const markAllRead = () => {
+        setEmails((prev) => prev.map(email => ({ ...email, read: true })));
+    };
+
     return (
         <MailContext.Provider
             value={{
@@ -80,6 +96,8 @@ export function MailProvider({ children }: { children: ReactNode }) {
                 toggleStar,
                 toggleRead,
                 deleteEmail,
+                refreshEmails,
+                markAllRead,
             }}
         >
             {children}
