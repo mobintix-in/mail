@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Star, Archive, Trash2, Mail, MailOpen, Reply, ReplyAll, Forward, MoreVertical, Printer, ExternalLink } from "lucide-react";
+import { ArrowLeft, Star, Archive, Trash2, Mail, MailOpen, Reply, ReplyAll, Forward, MoreVertical, Printer, ExternalLink, ChevronDown, Type, Paperclip, Smile } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useMail } from "../context/MailContext";
@@ -9,6 +9,8 @@ import { cn } from "../../lib/utils";
 export default function EmailDetail() {
     const { selectedEmail, closeEmail, toggleStar, toggleRead, deleteEmail, setIsComposeOpen } = useMail();
     const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [isReplying, setIsReplying] = useState(false);
+    const [replyText, setReplyText] = useState("");
 
     if (!selectedEmail) return null;
 
@@ -27,11 +29,16 @@ export default function EmailDetail() {
     };
 
     const handleReply = () => {
-        setIsComposeOpen(true);
+        setIsReplying(true);
+        // timeout to scroll to bottom after render
+        setTimeout(() => {
+            const element = document.getElementById('reply-editor');
+            element?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
     };
 
     const handleReplyAll = () => {
-        setIsComposeOpen(true);
+        setIsReplying(true);
     };
 
     const handleForward = () => {
@@ -41,6 +48,21 @@ export default function EmailDetail() {
     const handleArchive = () => {
         deleteEmail(selectedEmail.id);
         setShowMoreMenu(false);
+    };
+
+    const [isSending, setIsSending] = useState(false);
+
+    const handleSendReply = () => {
+        if (!replyText.trim()) return;
+
+        setIsSending(true);
+        // Simulate network delay
+        setTimeout(() => {
+            setIsSending(false);
+            setIsReplying(false);
+            setReplyText("");
+            // In a real app we would add the sent email to the thread here
+        }, 1000);
     };
 
     const handleOpenNewWindow = () => {
@@ -250,40 +272,108 @@ export default function EmailDetail() {
                     </div>
 
                     {/* Email Body */}
-                    <div className="prose prose-invert max-w-none">
+                    <div className="prose prose-invert max-w-none pb-12">
                         <div className="text-white/80 leading-relaxed whitespace-pre-wrap text-[0.95rem]">
                             {selectedEmail.body}
                         </div>
                     </div>
+
+                    {/* Inline Reply Editor */}
+                    {isReplying && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            id="reply-editor"
+                            className="bg-[#1e1e1e] border border-white/10 rounded-xl overflow-hidden mt-8 mb-8 shadow-2xl"
+                        >
+                            <div className="flex items-start gap-3 p-4">
+                                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold shrink-0">
+                                    M
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 text-sm text-white/60 mb-2">
+                                        <button className="flex items-center gap-1 hover:text-white">
+                                            <Reply size={14} />
+                                            <span>{selectedEmail.sender}</span>
+                                        </button>
+                                        <div className="border-l border-white/20 h-3 mx-1" />
+                                        <button className="hover:text-white">
+                                            <ChevronDown size={14} />
+                                        </button>
+                                    </div>
+                                    <textarea
+                                        value={replyText}
+                                        onChange={(e) => setReplyText(e.target.value)}
+                                        className="w-full bg-transparent border-none outline-none text-white text-sm min-h-[100px] resize-none placeholder:text-white/50 disabled:opacity-50 leading-relaxed"
+                                        placeholder="Type your reply here..."
+                                        autoFocus
+                                        disabled={isSending}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between p-2 bg-white/5 border-t border-white/5">
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={handleSendReply}
+                                        disabled={isSending || !replyText.trim()}
+                                        className={cn(
+                                            "bg-primary text-white px-4 py-1.5 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2",
+                                            isSending ? "opacity-70 cursor-wait" : "hover:bg-blue-600",
+                                            !replyText.trim() && !isSending && "opacity-50 cursor-not-allowed"
+                                        )}
+                                    >
+                                        {isSending ? "Sending..." : "Send"}
+                                    </button>
+                                    <button className="p-2 hover:bg-white/10 rounded text-white/60 hover:text-white transition-colors">
+                                        <Type size={18} />
+                                    </button>
+                                    <button className="p-2 hover:bg-white/10 rounded text-white/60 hover:text-white transition-colors">
+                                        <Paperclip size={18} />
+                                    </button>
+                                    <button className="p-2 hover:bg-white/10 rounded text-white/60 hover:text-white transition-colors">
+                                        <Smile size={18} />
+                                    </button>
+                                </div>
+                                <button
+                                    onClick={() => setIsReplying(false)}
+                                    className="p-2 hover:bg-white/10 rounded text-white/60 hover:text-red-400 transition-colors"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
             </div>
 
-            {/* Reply Footer */}
-            <div className="p-4 md:p-6 border-t border-white/10 bg-black/20 shrink-0">
-                <div className="flex items-center gap-2 md:gap-3 max-w-4xl mx-auto">
-                    <button
-                        onClick={handleReply}
-                        className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all"
-                    >
-                        <Reply size={18} />
-                        <span className="text-sm font-medium">Reply</span>
-                    </button>
-                    <button
-                        onClick={handleReplyAll}
-                        className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all hidden sm:flex"
-                    >
-                        <ReplyAll size={18} />
-                        <span className="text-sm font-medium">Reply All</span>
-                    </button>
-                    <button
-                        onClick={handleForward}
-                        className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all"
-                    >
-                        <Forward size={18} />
-                        <span className="text-sm font-medium">Forward</span>
-                    </button>
+            {/* Reply Footer - Hidden when Replying */}
+            {!isReplying && (
+                <div className="p-4 md:p-6 border-t border-white/10 bg-black/20 shrink-0">
+                    <div className="flex items-center gap-2 md:gap-3 max-w-4xl mx-auto">
+                        <button
+                            onClick={handleReply}
+                            className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all"
+                        >
+                            <Reply size={18} />
+                            <span className="text-sm font-medium">Reply</span>
+                        </button>
+                        <button
+                            onClick={handleReplyAll}
+                            className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all hidden sm:flex"
+                        >
+                            <ReplyAll size={18} />
+                            <span className="text-sm font-medium">Reply All</span>
+                        </button>
+                        <button
+                            onClick={handleForward}
+                            className="flex items-center gap-2 px-4 md:px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all"
+                        >
+                            <Forward size={18} />
+                            <span className="text-sm font-medium">Forward</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            )}
         </motion.div>
     );
 }
