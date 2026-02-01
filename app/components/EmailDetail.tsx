@@ -1,12 +1,14 @@
 "use client";
 
 import { ArrowLeft, Star, Archive, Trash2, Mail, MailOpen, Reply, ReplyAll, Forward, MoreVertical, Printer, ExternalLink } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { useMail } from "../context/MailContext";
 import { cn } from "../../lib/utils";
 
 export default function EmailDetail() {
     const { selectedEmail, closeEmail, toggleStar, toggleRead, deleteEmail, setIsComposeOpen } = useMail();
+    const [showMoreMenu, setShowMoreMenu] = useState(false);
 
     if (!selectedEmail) return null;
 
@@ -16,25 +18,57 @@ export default function EmailDetail() {
 
     const handleToggleRead = () => {
         toggleRead(selectedEmail.id);
+        setShowMoreMenu(false);
+    };
+
+    const handleToggleStar = () => {
+        toggleStar(selectedEmail.id);
+        setShowMoreMenu(false);
     };
 
     const handleReply = () => {
-        // Open compose with reply info
         setIsComposeOpen(true);
     };
 
     const handleReplyAll = () => {
-        // Open compose with reply all info
         setIsComposeOpen(true);
     };
 
     const handleForward = () => {
-        // Open compose with forward info
         setIsComposeOpen(true);
     };
 
     const handleArchive = () => {
         deleteEmail(selectedEmail.id);
+        setShowMoreMenu(false);
+    };
+
+    const handleOpenNewWindow = () => {
+        // In a real app, this would route to /mail/:id
+        const newWindow = window.open('', '_blank', 'width=800,height=600');
+        if (newWindow) {
+            newWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${selectedEmail.subject}</title>
+                        <style>
+                            body { font-family: sans-serif; padding: 40px; color: #333; line-height: 1.6; }
+                            h1 { font-size: 24px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+                            .meta { color: #666; font-size: 14px; margin-bottom: 30px; }
+                            .body { white-space: pre-wrap; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${selectedEmail.subject}</h1>
+                        <div class="meta">
+                            From: ${selectedEmail.sender} &lt;${selectedEmail.senderEmail}&gt;<br>
+                            Date: ${selectedEmail.date}
+                        </div>
+                        <div class="body">${selectedEmail.body}</div>
+                    </body>
+                </html>
+            `);
+        }
     };
 
     return (
@@ -78,7 +112,7 @@ export default function EmailDetail() {
                     </button>
                 </div>
 
-                <div className="flex items-center gap-1 md:gap-2">
+                <div className="flex items-center gap-1 md:gap-2 relative">
                     <button
                         onClick={() => window.print()}
                         className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors hidden sm:block"
@@ -86,12 +120,83 @@ export default function EmailDetail() {
                     >
                         <Printer size={20} />
                     </button>
-                    <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors hidden sm:block">
+                    <button
+                        onClick={handleOpenNewWindow}
+                        className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors hidden sm:block"
+                        title="Open in new window"
+                    >
                         <ExternalLink size={20} />
                     </button>
-                    <button className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors">
+                    <button
+                        onClick={() => setShowMoreMenu(!showMoreMenu)}
+                        className={cn(
+                            "p-2 hover:bg-white/5 rounded-lg transition-colors relative z-50",
+                            showMoreMenu ? "bg-white/10 text-white" : "text-white/40 hover:text-white"
+                        )}
+                        title="More options"
+                    >
                         <MoreVertical size={20} />
                     </button>
+
+                    {/* More Menu Dropdown */}
+                    <AnimatePresence>
+                        {showMoreMenu && (
+                            <>
+                                <div
+                                    className="fixed inset-0 z-40"
+                                    onClick={() => setShowMoreMenu(false)}
+                                />
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                    className="absolute right-0 top-full mt-2 w-48 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50"
+                                >
+                                    <div className="py-1">
+                                        <button
+                                            onClick={handleToggleRead}
+                                            className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2"
+                                        >
+                                            {selectedEmail.read ? <Mail size={16} /> : <MailOpen size={16} />}
+                                            {selectedEmail.read ? "Mark as unread" : "Mark as read"}
+                                        </button>
+                                        <button
+                                            onClick={handleToggleStar}
+                                            className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2"
+                                        >
+                                            <Star size={16} className={selectedEmail.starred ? "text-yellow-400 fill-current" : ""} />
+                                            {selectedEmail.starred ? "Remove star" : "Star message"}
+                                        </button>
+                                        <div className="h-px bg-white/10 my-1" />
+                                        <button
+                                            onClick={() => {
+                                                window.print();
+                                                setShowMoreMenu(false);
+                                            }}
+                                            className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2"
+                                        >
+                                            <Printer size={16} />
+                                            Print
+                                        </button>
+                                        <button
+                                            onClick={handleArchive}
+                                            className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2"
+                                        >
+                                            <Archive size={16} />
+                                            Archive
+                                        </button>
+                                        <button
+                                            onClick={handleDelete}
+                                            className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-2"
+                                        >
+                                            <Trash2 size={16} />
+                                            Delete
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            </>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
 
