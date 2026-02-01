@@ -15,8 +15,8 @@ const config: Config = {
                 background: "var(--background)",
                 foreground: "var(--foreground)",
                 primary: {
-                    DEFAULT: "#3b82f6",
-                    hover: "#2563eb",
+                    DEFAULT: "rgb(var(--primary-rgb) / <alpha-value>)",
+                    hover: "rgb(var(--primary-rgb) / 0.8)",
                 },
                 secondary: {
                     DEFAULT: "#ec4899",

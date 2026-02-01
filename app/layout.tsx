@@ -28,6 +28,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var rgb = localStorage.getItem('theme-rgb');
+                  if (rgb) {
+                    document.documentElement.style.setProperty('--primary-rgb', rgb);
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <AppShell>
           {children}
         </AppShell>

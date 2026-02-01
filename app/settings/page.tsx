@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { User, Bell, Shield, Palette, Mail, ToggleRight, Moon, Monitor, Settings } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "../../lib/utils";
 
 const tabs = [
@@ -12,9 +12,40 @@ const tabs = [
     { id: "appearance", label: "Appearance", icon: Palette },
 ];
 
+const colors = [
+    { id: 'blue', rgb: '59 130 246', bg: 'bg-blue-500' },
+    { id: 'purple', rgb: '168 85 247', bg: 'bg-purple-500' },
+    { id: 'green', rgb: '34 197 94', bg: 'bg-green-500' },
+    { id: 'orange', rgb: '249 115 22', bg: 'bg-orange-500' }
+];
+
 
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState("general");
+    const [accentColor, setAccentColor] = useState('blue');
+
+    const updateTheme = (colorId: string, rgb: string) => {
+        setAccentColor(colorId);
+        document.documentElement.style.setProperty('--primary-rgb', rgb);
+        localStorage.setItem('theme-rgb', rgb);
+        localStorage.setItem('theme-id', colorId);
+    };
+
+    useEffect(() => {
+        // Sync state with storage or current CSS variable on mount
+        const storedId = localStorage.getItem('theme-id');
+        if (storedId) {
+            setAccentColor(storedId);
+        } else {
+            // Fallback to computed style if no storage (e.g. first load)
+            const computed = getComputedStyle(document.documentElement).getPropertyValue('--primary-rgb').trim();
+            const normalized = computed.replace(/\s+/g, ' ');
+            const match = colors.find(c => c.rgb === normalized);
+            if (match) {
+                setAccentColor(match.id);
+            }
+        }
+    }, []);
 
     return (
         <div className="h-full bg-[#050505] text-white p-4 md:p-8 overflow-y-auto custom-scrollbar">
@@ -127,10 +158,18 @@ export default function SettingsPage() {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <button className="w-6 h-6 rounded-full bg-blue-500 ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0a]" />
-                                            <button className="w-6 h-6 rounded-full bg-purple-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
-                                            <button className="w-6 h-6 rounded-full bg-green-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
-                                            <button className="w-6 h-6 rounded-full bg-orange-500 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a] transition-all" />
+                                            {colors.map((c) => (
+                                                <button
+                                                    key={c.id}
+                                                    onClick={() => updateTheme(c.id, c.rgb)}
+                                                    className={cn(
+                                                        `w-6 h-6 rounded-full ${c.bg} transition-all`,
+                                                        accentColor === c.id
+                                                            ? "ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0a]"
+                                                            : "hover:scale-110 hover:ring-2 hover:ring-white/50 hover:ring-offset-2 hover:ring-offset-[#0a0a0a]"
+                                                    )}
+                                                />
+                                            ))}
                                         </div>
                                     </div>
                                 </div>

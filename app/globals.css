@@ -7,9 +7,14 @@
   --background: #0a0a0a;
   --foreground: #ededed;
 
-  --primary: #3b82f6;
-  /* Beautiful Blue */
-  --primary-glow: rgba(59, 130, 246, 0.5);
+  /* Primary Color - RGB Channels for dynamic opacity support */
+  --primary-rgb: 59 130 246;
+  /* Blue default */
+  --primary: rgb(var(--primary-rgb));
+  --primary-hover: rgb(var(--primary-rgb));
+  /* Simplification for now */
+
+  --primary-glow: rgba(var(--primary-rgb), 0.5);
 
   --secondary: #ec4899;
   /* Pink/Purple accent */
