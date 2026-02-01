@@ -75,8 +75,14 @@ export default function EmailList({ emails, isLoading }: EmailListProps) {
     setShowSelectMenu(false);
   };
 
+  const deleteSelectedEmails = () => {
+    selectedEmails.forEach(id => deleteEmail(id));
+    setSelectedEmails(new Set());
+  };
+
   const isAllSelected = emails.length > 0 && selectedEmails.size === emails.length;
   const isSomeSelected = selectedEmails.size > 0 && selectedEmails.size < emails.length;
+  const hasSelection = selectedEmails.size > 0;
 
   return (
     <div className="flex flex-col h-full bg-black/40 backdrop-blur-md lg:rounded-tl-3xl overflow-hidden shadow-2xl">
@@ -153,6 +159,17 @@ export default function EmailList({ emails, isLoading }: EmailListProps) {
           >
             <RefreshCw size={20} className={cn(isRefreshing && "animate-spin")} />
           </button>
+
+          {/* Trash button - shows when emails are selected */}
+          {hasSelection && (
+            <button
+              onClick={deleteSelectedEmails}
+              className="p-2 hover:bg-red-500/20 rounded-lg text-white/40 hover:text-red-400 transition-colors"
+              title={`Delete ${selectedEmails.size} selected`}
+            >
+              <Trash2 size={20} />
+            </button>
+          )}
           <div className="relative">
             <button
               onClick={() => setShowMoreMenu(!showMoreMenu)}
